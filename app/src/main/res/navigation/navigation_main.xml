@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_main"
@@ -13,10 +12,22 @@
         <action
             android:id="@+id/actionCreateTodo"
             app:destination="@id/createTodoFragment" />
+        <action
+            android:id="@+id/actionEditTodoFragment"
+            app:destination="@id/editTodoFragment" />
     </fragment>
     <fragment
         android:id="@+id/createTodoFragment"
         android:name="com.example.todoapp160421097.view.CreateTodoFragment"
         android:label="fragment_create_todo"
         tools:layout="@layout/fragment_create_todo" />
+    <fragment
+        android:id="@+id/editTodoFragment"
+        android:name="com.example.todoapp160421097.view.EditToDoFragment"
+        android:label="fragment_edit_todo"
+        tools:layout="@layout/fragment_create_todo" >
+        <argument
+            android:name="uuid"
+            app:argType="integer" />
+    </fragment>
 </navigation>
