@@ -22,27 +22,34 @@ class ListTodoViewModel(application: Application)
 
     override val coroutineContext: CoroutineContext
         get() = job + Dispatchers.IO
+
     fun refresh() {
         loadingLD.value = true
         todoLoadErrorLD.value = false
         launch {
             val db = buildDb(getApplication())
-
             todoLD.postValue(db.todoDao().selectAllTodo())
             loadingLD.postValue(false)
         }
     }
-
-
     fun clearTask(todo: Todo) {
         launch {
             val db = buildDb(getApplication())
-
             db.todoDao().deleteTodo(todo)
 
             todoLD.postValue(db.todoDao().selectAllTodo())
         }
     }
 
-}
+    fun markAsDone(todo: Todo) {
+        launch {
+            val db = buildDb(getApplication())
+            db.todoDao().markAsDone(todo.uuid)
 
+            todoLD.postValue(db.todoDao().selectAllTodo())
+        }
+    }
+
+
+
+}

@@ -14,18 +14,17 @@ import com.example.todoapp160421097.databinding.FragmentTodoListBinding
 import com.example.todoapp160421097.viewmodel.ListTodoViewModel
 
 class TodoListFragment : Fragment() {
-    private lateinit var binding: FragmentTodoListBinding
     private lateinit var viewModel: ListTodoViewModel
-    private val todoListAdapter  = TodoListAdapter(arrayListOf(),
-        { item -> viewModel.clearTask(item) })
-
+    private val todoListAdapter  = TodoListAdapter(arrayListOf(), { item -> viewModel.markAsDone(item) })
+    private lateinit var binding: FragmentTodoListBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentTodoListBinding.inflate(inflater, container, false)
-        return binding.root
+        binding = FragmentTodoListBinding.inflate(inflater,container,false)
+        return  binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -33,15 +32,14 @@ class TodoListFragment : Fragment() {
         viewModel.refresh()
         binding.recViewTodo.layoutManager = LinearLayoutManager(context)
         binding.recViewTodo.adapter = todoListAdapter
-
         binding.btnFab.setOnClickListener {
             val action = TodoListFragmentDirections.actionCreateTodo()
             Navigation.findNavController(it).navigate(action)
         }
 
         observeViewModel()
-    }
 
+    }
     fun observeViewModel() {
         viewModel.todoLD.observe(viewLifecycleOwner, Observer {
             todoListAdapter.updateTodoList(it)
@@ -52,7 +50,6 @@ class TodoListFragment : Fragment() {
                 binding.recViewTodo?.visibility = View.VISIBLE
             }
         })
-
         viewModel.loadingLD.observe(viewLifecycleOwner, Observer {
             if(it == false) {
                 binding.progressLoad?.visibility = View.GONE
@@ -60,7 +57,6 @@ class TodoListFragment : Fragment() {
                 binding.progressLoad?.visibility = View.VISIBLE
             }
         })
-
         viewModel.todoLoadErrorLD.observe(viewLifecycleOwner, Observer {
             if(it == false) {
                 binding.txtError?.visibility = View.GONE
@@ -68,7 +64,6 @@ class TodoListFragment : Fragment() {
                 binding.txtError?.visibility = View.VISIBLE
             }
         })
-
     }
-}
 
+}

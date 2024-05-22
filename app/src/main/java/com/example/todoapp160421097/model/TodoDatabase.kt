@@ -6,30 +6,39 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.todoapp160421097.util.DB_NAME
 import com.example.todoapp160421097.util.MIGRATION_1_2
+import com.example.todoapp160421097.util.MIGRATION_2_3
 
-@Database(entities = arrayOf(Todo::class), version =  2)
-abstract class TodoDatabase: RoomDatabase() {
-    abstract fun todoDao(): TodoDao
+class TodoDatabase {
 
-    companion object {
-        @Volatile private var instance: TodoDatabase ?= null
-        private val LOCK = Any()
+    @Database(entities = arrayOf(Todo::class), version =  3)
+    abstract class TodoDatabase: RoomDatabase() {
+        abstract fun todoDao(): TodoDao
 
-        private fun buildDatabase(context:Context) = Room.databaseBuilder(
-            context.applicationContext,
-            TodoDatabase::class.java, "newtododb")
-            .addMigrations(MIGRATION_1_2)
-            .build()
+        companion object {
+            @Volatile private var instance: TodoDatabase ?= null
+            private val LOCK = Any()
 
-        operator fun invoke(context:Context) {
-            if(instance!=null) {
-                synchronized(LOCK) {
-                    instance ?: buildDatabase(context).also {
-                        instance = it
+            fun buildDatabase(context: Context) =
+                Room.databaseBuilder(
+                    context.applicationContext,
+                    TodoDatabase::class.java,
+                    DB_NAME)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .build()
+
+            operator fun invoke(context:Context) {
+                if(instance!=null) {
+                    synchronized(LOCK) {
+                        instance ?: buildDatabase(context).also {
+                            instance = it
+                        }
                     }
                 }
             }
+
         }
 
     }
+
+
 }
